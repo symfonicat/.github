@@ -1,5 +1,3 @@
-# Symfonicat
-
 **symfonicat** is a JMS (JavaScript Management System) built on Symfony
 
 It's taking a second to port from a built project into something that makes sense to be open-source and reusable. Just give me a minute and you're going to have the coolest thing you've ever seen, free. I built it, the name is tayp - don't wear it out :)
