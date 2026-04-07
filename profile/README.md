@@ -7,4 +7,3 @@ It's the web's perfect union of Symfony (Doctrine/PHP), Node.js/Webpack (JavaScr
 - Bootstrap people welcome, CSS3/SCSS/HTML5 are fine here
 
 it's Symfony in a beautiful swirl or functionality, reusability, and simplicity
-seeking support from @dunglas maybe
