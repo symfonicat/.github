@@ -16,4 +16,5 @@ cd symfonicat
 docker compose up -d
 npm install
 npm run dev
+docker exec php bin/console symfonicat:admin:create <username> <password>
 ```
