@@ -7,3 +7,13 @@ It's the web's perfect union of Symfony (Doctrine/PHP), Node.js/Webpack (JavaScr
 - Bootstrap people welcome, CSS3/SCSS/HTML5 are accepted here
 
 it's Symfony in a beautiful swirl or JS functionality, modularity, and simplicity
+
+### Install
+
+```bash
+composer create-project symfonicat/core symfonicat
+cd symfonicat
+docker compose up -d
+npm install
+npm run dev
+```
