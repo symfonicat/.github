@@ -1,34 +1,55 @@
-**`Symfonicat`** is a JMS (JavaScript Management System) built on Symfony: an admin portion to manage everything, database-driven Webpack Encore front end, Electron support, and a FrankenPHP-oriented back end. It ships with a Docker setup to get up and running in no time: FrankenPHP, PostgreSQL, Mercure Hub, and Redis, completely configured for Symfony.
+`Symfonicat` is a JMS (JavaScript Management System) built on Symfony. `symfonicat/core` is the full application package: the admin runtime, database-driven Webpack Encore front end, Electron support, and the FrankenPHP-oriented back end all live here.
 
-It's the web's perfect union of Symfony (Doctrine/PHP), Node.js/Webpack Encore/Stimulus (JavaScript), and Bootstrap (SCSS). It is a heavily database driven system that handles domains, subdomains, routing, catch-all client-side routing, Electron applications, Webpack bundles, it's... well, it's awesome. It's a better shell than anything that's out there - except for Drupal.
+It ships with a Docker stack to get running quickly: FrankenPHP, PostgreSQL, Mercure Hub, and Redis, already wired for Symfony.
 
-It supports what Webpack Encore supports, so that includes React, Angular, TypeScript, ES6 modules, Turbo Frames, everything JavaScript/source maps/integrity hashes/Babel/Sass. Encore imports the included Bootstrap library in SCSS and prints it out in a bundle, but can print additional per-bundle SCSS as well - making a really smooth system for including theme assets strategically.
+It is the web's union of Symfony, Doctrine, PHP, Node.js, Webpack Encore, Stimulus, Bootstrap, SCSS, and Twig. It is a heavily database-driven system that handles domains, subdomains, routing, catch-all client-side routing, Electron applications, and Webpack bundles from one admin-managed shell.
+
+It supports what Webpack Encore supports, so that includes React, Angular, TypeScript, ES modules, Turbo, source maps, integrity hashes, Babel, and Sass. Encore imports the included Bootstrap library in SCSS and builds it into a bundle, while still allowing additional per-bundle SCSS for more targeted theme assets.
 
 - if you don't like PHP, you can leave
-- unless you just like JavaScript more than PHP - you can stay
-- Bootstrap and Twig people welcome, CSS3/SCSS/HTML5 are accepted here
+- unless you just like JavaScript more than PHP, then you can stay
+- Bootstrap, Twig, CSS3, SCSS, and HTML5 people are welcome here
 
-it's Symfony in a beautiful swirl or JS functionality, modularity, and simplicity
+It's Symfony in a beautiful swirl of JavaScript functionality, modularity, and simplicity.
 
-### Entities
+## What ships in this repo
 
-- **`Domain`**: top level domain management, supports redirects
-- **`Project`**: has a slug that matches to a subdomain like `project.example.com`. It's automatically configured to load a bundle that exists in the filesystem. **`Project`** entities can be assigned to multiple **`Domain`** entities for modularity like `user.*.com`
-- **`Module`**: micro-bundles assignable to **`Domain`** or **`Project`** entities that bootstrap after the main **`Domain`** or **`Project`** bundles
-- **`RoutingRule`**: minimal routing rules that can assign 0 index path arguments to specific **`Domain`** entities, to assert that one Symfony path argument is for one **`Domain`**
+- the full `symfonicat/core` Symfony application
+- the public frontend runtime for `/` and `/{path}`
+- the separate `/admin` runtime and CRUD surface
+- the Webpack Encore data interface driven by `symfonicat:data:webpack`
+- shared assets under `assets` and build output under `public/build`
+- the Electron runtime and related console commands
+- FrankenPHP-oriented Docker and Caddy infrastructure in this repository
 
-### Philosophy
+## Stack
 
-- only supports one subdomain
-- a subdomain **`(Project)`** is usually a second-tier section of any given site so why not have them each be a bundle?
-- **`Project`** entities can all be exported to Electron apps
-- they exist in the database as entities for Symfony-supported referencing, modularity, extension, and tracking
-- there is a catch-all route for when a **`Project`** is present, so no matter what URL you load it's client-side routed
-- if no **`Project`** is present, the **`Domain`** bundle is loaded
-- if you're on a **`Domain`** and there's a path, then Symfony handles it
-- if you're on a **`Domain`** and there's a path and a **`RoutingRule`** for the first path argument, it redirects to the correct **`Domain`** and Symfony handles it
+- Symfony 8, Doctrine, and PHP
+- Node.js, Webpack Encore, Stimulus, and Turbo
+- Bootstrap, SCSS, Twig, and HTML5
+- FrankenPHP and Caddy
+- PostgreSQL, Mercure, and Redis
 
-### Install
+## Entities
+
+- `Domain`: top-level domain management, including redirects and domain-level runtime context
+- `Project`: subdomain-backed runtime shells keyed by slug; projects can be attached to multiple domains and prepared for Electron output
+- `Module`: micro-bundles assignable to `Domain` or `Project` entities that bootstrap after the main domain or project runtime
+- `RoutingRule`: minimal routing rules that can map the first path segment to a specific `Domain`
+- `Admin`: a separate admin auth model owned by Symfonicat for the `/admin` area
+
+## Philosophy
+
+- only supports one subdomain layer
+- a subdomain (`Project`) is usually a second-tier section of a site, so Symfonicat treats it as a first-class runtime shell
+- `Project` entities exist in the database for Symfony-native referencing, modularity, extension, and tracking
+- `Project` entities can be prepared for Electron applications
+- when a `Project` is active, the public runtime uses a catch-all route so the rest of the URL can be client-side routed
+- if no `Project` is active, the `Domain` runtime is loaded
+- if you are on a `Domain` and there is a path, Symfony handles it
+- if you are on a `Domain`, there is a path, and a matching `RoutingRule` exists for the first path segment, Symfonicat can redirect to the correct `Domain` and let Symfony continue from there
+
+## Install
 
 ```bash
 composer create-project symfonicat/core symfonicat
@@ -36,5 +57,23 @@ cd symfonicat
 docker compose up -d
 npm install
 npm run dev
-docker exec php bin/console symfonicat:admin:create <username> <password>
+docker exec php bin/console symfonicat:admin:create <email> <password>
 ```
+
+On first container boot, the `php` service bootstraps the local stack for development:
+
+- synchronizes the Doctrine schema
+- seeds a `localhost` domain row
+- seeds and enables the `analytics` module for `localhost`
+
+## Useful commands
+
+- `bin/console symfonicat:admin:create <email> <password>`
+- `bin/console symfonicat:admin:delete <email>`
+- `bin/console symfonicat:data:webpack`
+- `bin/console symfonicat:data:electron`
+- `bin/console symfonicat:electron:prepare`
+- `bin/console symfonicat:electron:dev`
+- `bin/console symfonicat:electron:build`
+- `bin/console symfonicat:electron:package`
+- `bin/console symfonicat:public-suffix:refresh`
