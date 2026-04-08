@@ -12,7 +12,7 @@ It supports what Webpack Encore supports, so that includes React, Angular, TypeS
 
 It's Symfony in a beautiful swirl of JavaScript functionality, modularity, and simplicity.
 
-## What ships in this repo
+## Ships
 
 - the full `symfonicat/core` Symfony application
 - the public frontend runtime for `/` and `/{path}`
@@ -59,10 +59,6 @@ npm install
 npm run dev
 docker exec php bin/console symfonicat:admin:create <email> <password>
 ```
-
-On first container boot, the `php` service bootstraps the local stack for development:
-
-- synchronizes the Doctrine schema
 - seeds a `localhost` domain row
 - seeds and enables the `analytics` module for `localhost`
 
