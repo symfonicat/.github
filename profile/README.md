@@ -1,4 +1,4 @@
-[`symfonicat/core`](https://github.com/symfonicat/core) is the full Symfonicat Symfony application: admin, public runtime, webpack, Electron, and the FrankenPHP-oriented starter shell all live there
+[`symfonicat/core`](https://github.com/symfonicat/core) is the full Symfonicat Symfony application
 
 ## Install
 
