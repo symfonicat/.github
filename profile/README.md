@@ -141,6 +141,7 @@ REDIS_URL=redis://redis:6379
 MESSENGER_TRANSPORT_DSN=redis://redis:6379/symfonicat_messages
 MESSENGER_FAILED_TRANSPORT_DSN=redis://redis:6379/symfonicat_failed_messages
 MESSENGER_CONSUMER_NAME=symfonicat
+MESSENGER_WORKERS=2
 ```
 
 Symfony uses Redis for shared runtime infrastructure:
@@ -151,13 +152,17 @@ Symfony uses Redis for shared runtime infrastructure:
 - `cache.symfonicat` is available as a one-hour application cache pool for Symfonicat runtime data
 - Messenger uses Redis streams for the `async` and `failed` transports
 - `Symfony\Component\Mercure\Update` messages dispatched through Messenger are routed to `async`
+- Docker Compose runs `MESSENGER_WORKERS` dedicated `messenger-worker` containers, defaulting to `2`
 
-Run a Redis-backed Messenger worker when you need async message consumption:
+The main `php` container owns `symfonicat:bootstrap`. Worker containers set `SYMFONICAT_AUTO_BOOTSTRAP=0` and export their container hostname as `MESSENGER_CONSUMER_NAME`, so Redis stream consumers stay distinct without racing bootstrap.
+
+Start or refresh the worker pool by bringing up the stack after changing `MESSENGER_WORKERS`:
 
 ```bash
-docker exec php bin/console messenger:consume async
-docker exec php bin/console messenger:stats
-docker exec php bin/console messenger:failed:show
+docker compose up -d
+docker compose ps messenger-worker
+docker compose exec php bin/console messenger:stats
+docker compose exec php bin/console messenger:failed:show
 ```
 
 ## Key console commands
