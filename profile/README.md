@@ -126,11 +126,26 @@ const parsedHtmlWithPath = await 'frame'.html('path/secondpath', { working: true
 Those helpers are available through the shared [app.js](assets/app.js) bootstrap. Module entrypoints do not need to import `./module` themselves.
 
 ## Admin Area
-``
+
 The admin runtime is separate from any public app user system.
 
-- admin auth is HTTP basic
+- admin auth requires both HTTP basic credentials and a TOTP MFA code
 - admin credentials live in the separate `symfonicat_admin` table
+- `symfonicat:admin:create <email> <password>` creates or updates an admin and prints a terminal QR code for MFA enrollment
+- `/admin/login` is the MFA checkpoint; the request only reaches the admin runtime after the current HTTP basic credentials and current MFA code both pass
+
+MFA flow:
+
+1. Run `docker compose exec php bin/console symfonicat:admin:create <email> <password>`.
+2. Scan the QR code shown in the terminal with a TOTP authenticator app.
+3. Open any `/admin/*` URL and complete the HTTP basic prompt with the same email and password.
+4. After HTTP basic succeeds, enter the current TOTP code on `/admin/login`.
+5. Only after MFA succeeds does the full admin navigation and admin runtime become available.
+
+Notes:
+
+- MFA verification is tied to the current HTTP basic credentials through the session-backed admin gate.
+- Logging out clears the admin MFA state and the browser's cached basic-auth credentials.
 
 ## Redis
 
