@@ -200,6 +200,6 @@ Ops and diagnostics:
 
 This repo ships app-level infrastructure files directly:
 
-- [compose.yaml](compose.yaml) for FrankenPHP, Mercure, PostgreSQL, and Redis
+- [compose.yaml](compose.yaml) for FrankenPHP, Mercure, PostgreSQL, Messenger Workers, nd Redis
 - [Caddyfile](Caddyfile) for the FrankenPHP/Caddy setup
 - [electron.js](electron.js) plus the [electron](electron) directory for desktop packaging
